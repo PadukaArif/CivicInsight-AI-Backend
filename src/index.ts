@@ -39,8 +39,9 @@ const app = new Elysia()
   .get("/", () => ({ status: "ok", message: "CivicInsight AI Backend is running" }))
   .use(contactsRoutes)
   .use(pollRoutes)
-  .listen(process.env.PORT || 4000, () => {
-    console.log(`Server is running on port ${process.env.PORT || 4000}`)
+  .listen(process.env.PORT ? parseInt(process.env.PORT, 10) : 4000, () => {
+    const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 4000;
+    console.log(`Server is running on port ${port}`)
   })
 
   
