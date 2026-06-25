@@ -58,7 +58,7 @@ export class NewsService {
       title: news.title,
       description: news.description,
       image: news.image,
-      url: news.url,
+      url: news.link || news.url,
     }))
   }
 
