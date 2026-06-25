@@ -1,3 +1,4 @@
 import { Database } from "bun:sqlite"
 
-export const db = new Database("civic.db", {strict: true})
+const dbPath = process.env.DATABASE_PATH || "civic.db";
+export const db = new Database(dbPath, {strict: true})
