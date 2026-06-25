@@ -3,13 +3,13 @@ WORKDIR /app
 
 FROM base AS install
 RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
+COPY package.json bun.lock /temp/dev/
+RUN cd /temp/dev && bun install
 
 FROM base AS release
 COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
-EXPOSE 3000
+EXPOSE 4000
 
 CMD ["bun", "run", "src/index.ts"]
