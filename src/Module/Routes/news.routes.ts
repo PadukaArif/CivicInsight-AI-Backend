@@ -7,6 +7,8 @@ export const newsRoutes = new Elysia({
   // Get all
   .get("/cnn", NewsController.getCnnNews)
   .get("/tempo", NewsController.getTempoNews)
+  .get("/jaki", NewsController.getJakiReports)
+  .get("/bansos", NewsController.getBansosStatus)
 
   // Search
   .get("/cnn/search", NewsController.searchCnnNews)

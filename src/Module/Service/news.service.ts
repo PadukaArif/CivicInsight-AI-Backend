@@ -40,6 +40,18 @@ export class NewsService {
     return this.formatTempo(filtered)
   }
 
+  // 🔎 GET ALL JAKI REPORTS
+  static async getJakiReports() {
+    const response = await BeritaClient.jakiReports()
+    return response.data
+  }
+
+  // 🔎 GET BANSOS STATUS
+  static async getBansosStatus() {
+    const response = await BeritaClient.bansosData()
+    return response.data
+  }
+
   // 🧩 FORMAT CNN
   private static formatCnn(data: any[]) {
     return data.map((news) => ({

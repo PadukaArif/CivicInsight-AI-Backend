@@ -38,4 +38,105 @@ export class UserController {
       };
     }
   }
+
+  static login({ body, set }: any) {
+    try {
+      const result = UserService.login(body);
+      return {
+        success: true,
+        message: "Login berhasil",
+        data: result
+      };
+    } catch (error: any) {
+      set.status = 401;
+      return {
+        success: false,
+        message: error.message || "Login gagal"
+      };
+    }
+  }
+
+  static getPending({ set }: any) {
+    try {
+      const result = UserService.getPending();
+      return {
+        success: true,
+        data: result
+      };
+    } catch (error: any) {
+      set.status = 500;
+      return {
+        success: false,
+        message: error.message || "Gagal mengambil data warga pending"
+      };
+    }
+  }
+
+  static getApproved({ set }: any) {
+    try {
+      const result = UserService.getApproved();
+      return {
+        success: true,
+        data: result
+      };
+    } catch (error: any) {
+      set.status = 500;
+      return {
+        success: false,
+        message: error.message || "Gagal mengambil data warga terdaftar"
+      };
+    }
+  }
+
+  static approve({ params, set }: any) {
+    try {
+      const id = Number(params.id);
+      UserService.approve(id);
+      return {
+        success: true,
+        message: "Pendaftaran warga berhasil disetujui"
+      };
+    } catch (error: any) {
+      set.status = 500;
+      return {
+        success: false,
+        message: error.message || "Gagal menyetujui pendaftaran"
+      };
+    }
+  }
+
+  static reject({ params, set }: any) {
+    try {
+      const id = Number(params.id);
+      UserService.reject(id);
+      return {
+        success: true,
+        message: "Pendaftaran warga berhasil ditolak/dihapus"
+      };
+    } catch (error: any) {
+      set.status = 500;
+      return {
+        success: false,
+        message: error.message || "Gagal menghapus pendaftaran warga"
+      };
+    }
+  }
+
+  static updatePoints({ params, body, set }: any) {
+    try {
+      const id = Number(params.id);
+      const points = Number(body.points);
+      UserService.updatePoints(id, points);
+      return {
+        success: true,
+        message: "Poin warga berhasil diperbarui"
+      };
+    } catch (error: any) {
+      set.status = 500;
+      return {
+        success: false,
+        message: error.message || "Gagal memperbarui poin warga"
+      };
+    }
+  }
 }

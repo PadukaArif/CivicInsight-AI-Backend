@@ -3,11 +3,13 @@ export interface CreateUserDTO {
   password: string;
   nik: string;
   fullName: string;
-  role: 'warga' | 'admin_rt' | 'admin_rw';
-  rt: string;
-  rw: string;
+  role?: 'warga' | 'admin_rt' | 'admin_rw';
+  rt?: string;
+  rw?: string;
   phoneNumber?: string;
-  isLansia: number;
+  isLansia?: number;
+  status?: 'pending' | 'approved';
+  points?: number;
 }
 
 export interface RegisterInput {
@@ -15,9 +17,11 @@ export interface RegisterInput {
   password: string;
   nik: string;
   fullName: string;
-  role: 'warga' | 'admin_rt' | 'admin_rw';
-  rt: string;
-  rw: string;
+  role?: 'warga' | 'admin_rt' | 'admin_rw';
+  rt?: string;
+  rw?: string;
   phoneNumber?: string;
-  isLansia: number;
+  isLansia?: number;
+  status?: 'pending' | 'approved';
+  points?: number;
 }

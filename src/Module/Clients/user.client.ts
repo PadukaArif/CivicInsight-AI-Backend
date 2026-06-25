@@ -12,27 +12,29 @@ export class UserClient {
   
       // 2. Use standard '?' placeholders for profiles
       const insertProfile = db.prepare(`
-        INSERT INTO profiles (account_id, nik, full_name, role, rt, rw, phone_number, is_lansia)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO profiles (account_id, nik, full_name, role, rt, rw, phone_number, is_lansia, status, points)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `)
   
       insertProfile.run(
         accountId,
         data.nik,
         data.fullName,
-        data.role,
-        data.rt ?? null,
-        data.rw ?? null,
+        data.role || 'warga',
+        data.rt || '04',
+        data.rw || '02',
         data.phoneNumber ?? null,
-        data.isLansia
+        data.isLansia ?? 0,
+        data.status || 'pending',
+        data.points ?? 0
       )
   
       return { accountId }
   }
   
   static findAccountByEmail(email: string) {
-      const query = db.prepare("SELECT id, email FROM accounts WHERE email = ?");
-      return query.get(email);
+      const query = db.prepare("SELECT id, email, password FROM accounts WHERE email = ?");
+      return query.get(email) as any;
     }
   
   static findProfileByNik(nik: string) {
@@ -51,12 +53,71 @@ export class UserClient {
         p.rt, 
         p.rw, 
         p.phone_number AS phoneNumber, 
-        p.is_lansia AS isLansia
+        p.is_lansia AS isLansia,
+        p.status,
+        p.points
       FROM accounts a
       JOIN profiles p ON a.id = p.account_id
       WHERE a.id = ?
     `);
     
     return query.get(id) as any;
+  }
+
+  static findPending() {
+    const query = db.prepare(`
+      SELECT 
+        a.id, 
+        a.email, 
+        p.nik, 
+        p.full_name AS fullName, 
+        p.role, 
+        p.rt, 
+        p.rw, 
+        p.phone_number AS phoneNumber, 
+        p.is_lansia AS isLansia,
+        p.status,
+        p.points
+      FROM accounts a
+      JOIN profiles p ON a.id = p.account_id
+      WHERE p.status = 'pending'
+    `);
+    return query.all() as any[];
+  }
+
+  static findApproved() {
+    const query = db.prepare(`
+      SELECT 
+        a.id, 
+        a.email, 
+        p.nik, 
+        p.full_name AS fullName, 
+        p.role, 
+        p.rt, 
+        p.rw, 
+        p.phone_number AS phoneNumber, 
+        p.is_lansia AS isLansia,
+        p.status,
+        p.points
+      FROM accounts a
+      JOIN profiles p ON a.id = p.account_id
+      WHERE p.status = 'approved'
+    `);
+    return query.all() as any[];
+  }
+
+  static approve(id: number) {
+    const query = db.prepare("UPDATE profiles SET status = 'approved' WHERE account_id = ?");
+    return query.run(id);
+  }
+
+  static reject(id: number) {
+    const query = db.prepare("DELETE FROM accounts WHERE id = ?");
+    return query.run(id);
+  }
+
+  static updatePoints(id: number, points: number) {
+    const query = db.prepare("UPDATE profiles SET points = ? WHERE account_id = ?");
+    return query.run(points, id);
   }
 }

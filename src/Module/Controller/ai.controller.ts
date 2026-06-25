@@ -2,7 +2,7 @@ import { chatWithAI, chatWithGemini } from "../Service/ai.services"
 
 export const aiController = {
   chat: async ({ body }: { body: any }) => {
-    const { message, provider } = body
+    const { message, provider = "gemini", systemPrompt } = body
 
     if (!message) {
       return {
@@ -11,19 +11,12 @@ export const aiController = {
       }
     }
 
-    if (!provider) {
-      return {
-        success: false,
-        message: "Provider is required"
-      }
-    }
-
     try {
       let reply
       if (provider === "gemini") {
-        reply = await chatWithGemini(message)
+        reply = await chatWithGemini(message, systemPrompt)
       } else if (provider === "groq") {
-        reply = await chatWithAI(message)
+        reply = await chatWithAI(message, systemPrompt)
       }
 
       return {

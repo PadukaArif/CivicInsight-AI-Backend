@@ -18,16 +18,23 @@ export const userRoutes = new Elysia({ prefix: '/auth' })
         error: 'NIK harus berjumlah 16 karakter',
       }),
       fullName: t.String({ error: 'Nama lengkap wajib diisi' }),
-      role: t.Union(
-        [t.Literal('warga'), t.Literal('admin_rt'), t.Literal('admin_rw')],
-        { error: 'Role harus berupa warga, admin_rt, atau admin_rw' }
+      role: t.Optional(
+        t.Union(
+          [t.Literal('warga'), t.Literal('admin_rt'), t.Literal('admin_rw')],
+          { error: 'Role harus berupa warga, admin_rt, atau admin_rw' }
+        )
       ),
-      rt: t.Optional(t.Number()),
-      rw: t.Optional(t.Number()),
-      phoneNumber: t.Optional(t.String()), // Bersifat opsional (boleh tidak dikirim)
-      isLansia: t.Number({
-        error: 'Status lansia harus berupa angka (0 atau 1)',
-      }),
+      rt: t.Optional(t.String()),
+      rw: t.Optional(t.String()),
+      phoneNumber: t.Optional(t.String()),
+      isLansia: t.Optional(t.Number()),
     }),
   })
+  .post('/login', UserController.login)
   .get('/profile/:id', UserController.getProfile)
+  .get('/pending', UserController.getPending)
+  .get('/approved', UserController.getApproved)
+  .post('/approve/:id', UserController.approve)
+  .post('/reject/:id', UserController.reject)
+  .patch('/profile/:id/points', UserController.updatePoints)
+

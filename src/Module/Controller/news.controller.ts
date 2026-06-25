@@ -32,4 +32,12 @@ export class NewsController {
 
     return await NewsService.searchTempoNews(query.q)
   }
+
+  static async getJakiReports() {
+    return await NewsService.getJakiReports()
+  }
+
+  static async getBansosStatus() {
+    return await NewsService.getBansosStatus()
+  }
 }

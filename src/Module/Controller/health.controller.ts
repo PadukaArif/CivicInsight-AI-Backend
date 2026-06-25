@@ -7,8 +7,8 @@ export class HealthController {
     return data
   }
 
-  static async globalHealthNews() {
-    const data = await HealthService.globalHealthNews()
+  static async globalHealthNews({ query }: { query: { q?: string } }) {
+    const data = await HealthService.globalHealthNews(query.q)
     return data
   }
 }
