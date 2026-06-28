@@ -2,9 +2,9 @@ import { UserService } from "../Service/user.service";
 import type { RegisterInput } from "../global.types";
 
 export class UserController {
-  static register({ body, set }: any) {
+  static async register({ body, set }: any) {
     try {
-      const result = UserService.register(body);
+      const result = await UserService.register(body);
       set.status = 201
       return {
         success: true,
@@ -39,9 +39,9 @@ export class UserController {
     }
   }
 
-  static login({ body, set }: any) {
+  static async login({ body, set }: any) {
     try {
-      const result = UserService.login(body);
+      const result = await UserService.login(body);
       return {
         success: true,
         message: "Login berhasil",

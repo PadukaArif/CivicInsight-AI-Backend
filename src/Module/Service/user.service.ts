@@ -3,26 +3,29 @@ import { UserClient } from "../Clients/user.client";
 import type { RegisterInput } from "../global.types";
 
 export class UserService {
-  static register = db.transaction((input: RegisterInput) => {
-    const existingAccount = UserClient.findAccountByEmail(input.email)
+  static async register(input: RegisterInput) {
+    const existingAccount = UserClient.findAccountByEmail(input.email);
     if (existingAccount) {
-      throw new Error("Email sudah terdaftar")
+      throw new Error("Email sudah terdaftar");
     }
 
-    const existingProfile = UserClient.findProfileByNik(input.nik)
+    const existingProfile = UserClient.findProfileByNik(input.nik);
     if (existingProfile) {
-      throw new Error("NIK sudah terdaftar")
+      throw new Error("NIK sudah terdaftar");
     }
 
-    // Set default points to 0, status to pending
+    // OWASP A02: Hash password securely using Argon2id/bcrypt via Bun.password
+    const hashedPassword = await Bun.password.hash(input.password);
+
     const registerData = {
       ...input,
+      password: hashedPassword,
       status: 'pending' as const,
       points: 0
     };
 
-    return UserClient.create(registerData)
-  })
+    return UserClient.create(registerData);
+  }
 
   static getProfile(id: number) {
     const user = UserClient.findById(id);
@@ -32,7 +35,7 @@ export class UserService {
     return user;
   }
 
-  static login(body: any) {
+  static async login(body: any) {
     const { email, password } = body;
     if (!email || !password) {
       throw new Error("Email dan password harus diisi");
@@ -43,7 +46,15 @@ export class UserService {
       throw new Error("Email atau password salah");
     }
 
-    if (account.password !== password) {
+    // OWASP A02: Verify hashed password with fallback for legacy plain text passwords
+    let isPasswordValid = false;
+    try {
+      isPasswordValid = await Bun.password.verify(password, account.password);
+    } catch {
+      isPasswordValid = account.password === password;
+    }
+
+    if (!isPasswordValid && account.password !== password) {
       throw new Error("Email atau password salah");
     }
 
