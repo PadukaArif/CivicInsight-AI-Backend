@@ -159,3 +159,11 @@ CREATE TABLE IF NOT EXISTS comfort_votes (
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
 )
 `)
+
+// Create Database Performance Indexes
+db.run(`CREATE INDEX IF NOT EXISTS idx_profiles_account ON profiles(account_id);`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_aduan_account ON aduan(account_id);`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_rumors_reporter ON rumors(reporter_id);`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_facts_rumor ON facts(rumor_id);`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_household_members_hh ON household_members(household_id);`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_announcements_created ON announcements(created_at);`);
