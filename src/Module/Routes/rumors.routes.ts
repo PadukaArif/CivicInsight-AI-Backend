@@ -6,9 +6,9 @@ export const rumorsRoutes = new Elysia()
   .get('/rumors', ({ set }) => {
     try {
       const query = db.prepare(`
-        SELECT r.id, r.reporter_id AS reporterId, r.judul, r.deskripsi, r.status, p.full_name AS reporterName
+        SELECT r.id, r.reporter_id AS reporterId, r.judul, r.deskripsi, r.status, COALESCE(p.full_name, 'Warga Teladan RT 04') AS reporterName
         FROM rumors r
-        JOIN profiles p ON r.reporter_id = p.account_id
+        LEFT JOIN profiles p ON r.reporter_id = p.account_id
       `);
       return { success: true, data: query.all() };
     } catch (e: any) {

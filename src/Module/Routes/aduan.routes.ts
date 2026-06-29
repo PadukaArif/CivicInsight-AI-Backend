@@ -5,9 +5,9 @@ export const aduanRoutes = new Elysia({ prefix: '/aduan' })
   .get('/', ({ set }) => {
     try {
       const query = db.prepare(`
-        SELECT a.id, a.account_id AS accountId, a.kategori, a.lokasi, a.deskripsi, a.status, a.tanggapan, p.full_name AS reporterName
+        SELECT a.id, a.account_id AS accountId, a.kategori, a.lokasi, a.deskripsi, a.status, a.tanggapan, COALESCE(p.full_name, 'Warga Teladan RT 04') AS reporterName
         FROM aduan a
-        JOIN profiles p ON a.account_id = p.account_id
+        LEFT JOIN profiles p ON a.account_id = p.account_id
       `);
       return { success: true, data: query.all() };
     } catch (e: any) {
