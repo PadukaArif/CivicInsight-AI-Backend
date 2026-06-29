@@ -166,4 +166,46 @@ db.run(`CREATE INDEX IF NOT EXISTS idx_aduan_account ON aduan(account_id);`);
 db.run(`CREATE INDEX IF NOT EXISTS idx_rumors_reporter ON rumors(reporter_id);`);
 db.run(`CREATE INDEX IF NOT EXISTS idx_facts_rumor ON facts(rumor_id);`);
 db.run(`CREATE INDEX IF NOT EXISTS idx_household_members_hh ON household_members(household_id);`);
-db.run(`CREATE INDEX IF NOT EXISTS idx_announcements_created ON announcements(created_at);`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_announcements_created ON announcements(created_at);`);
+
+// Seed default data if empty
+try {
+  const accountCount = db.prepare("SELECT COUNT(*) as count FROM accounts").get() as any;
+  if (accountCount.count === 0) {
+    db.run("INSERT INTO accounts (id, email, password) VALUES (1, 'warga@civicinsight.id', 'warga123')");
+    db.run("INSERT INTO profiles (account_id, nik, full_name, role, rt, rw, phone_number, is_lansia, status, points) VALUES (1, '3171012345670001', 'Budi Santoso (Warga RT 04)', 'warga', '04', '02', '081234567890', 0, 'approved', 120)");
+  }
+} catch (e) {}
+
+try {
+  const kasCount = db.prepare("SELECT COUNT(*) as count FROM kas_ledger").get() as any;
+  if (kasCount.count === 0) {
+    db.run("INSERT INTO kas_ledger (tanggal, keterangan, jenis, jumlah) VALUES ('2026-06-01', 'Iuran Bulanan Warga RT 04 Bulan Juni', 'pemasukan', 22000000.0)");
+    db.run("INSERT INTO kas_ledger (tanggal, keterangan, jenis, jumlah) VALUES ('2026-06-15', 'Pengadaan Alat Kebersihan & PJU Lingkungan', 'pengeluaran', 3500000.0)");
+  }
+} catch (e) {}
+
+try {
+  const aduanCount = db.prepare("SELECT COUNT(*) as count FROM aduan").get() as any;
+  if (aduanCount.count === 0) {
+    db.run("INSERT INTO aduan (account_id, kategori, lokasi, deskripsi, status, tanggapan) VALUES (1, 'Infrastruktur', 'Jl. Mawar Gang 3', 'Lampu penerangan jalan umum mati sejak kemarin malam mohon diperbaiki.', 'Diproses', 'Petugas teknis PLN/RT sudah dikontak dan sedang meluncur ke lokasi.')");
+  }
+} catch (e) {}
+
+try {
+  const annCount = db.prepare("SELECT COUNT(*) as count FROM announcements").get() as any;
+  if (annCount.count === 0) {
+    db.run("INSERT INTO announcements (title, content, category, urgency) VALUES ('Kerja Bakti Masal & Penghijauan RT 04', 'Dihimbau kepada seluruh warga RT 04 untuk hadir kerja bakti Minggu pagi jam 07.00 WIB.', 'Kegiatan', 'high')");
+    db.run("INSERT INTO announcements (title, content, category, urgency) VALUES ('Jadwal Posyandu Balita & Lansia', 'Layanan Posyandu akan dilaksanakan di Pos Balai Warga hari Rabu mendatang.', 'Umum', 'normal')");
+  }
+} catch (e) {}
+
+try {
+  const contactCount = db.prepare("SELECT COUNT(*) as count FROM emergency_contacts").get() as any;
+  if (contactCount.count === 0) {
+    db.run("INSERT INTO emergency_contacts (nama, nomor) VALUES ('Ketua RT 04 (Pak Agus)', '0812-3456-7890')");
+    db.run("INSERT INTO emergency_contacts (nama, nomor) VALUES ('Sekretaris RT (Ibu Ratna)', '0813-9876-5432')");
+    db.run("INSERT INTO emergency_contacts (nama, nomor) VALUES ('Pos Keamanan RT 04', '0811-2233-4455')");
+  }
+} catch (e) {}
+
