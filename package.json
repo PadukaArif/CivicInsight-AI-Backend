@@ -1,5 +1,13 @@
 {
-  "name": "project",
+  "name": "civicinsight-ai-backend",
+  "version": "1.0.0",
+  "description": "CivicInsight AI Backend - RESTful API platform digital RT/RW berbasis AI",
+  "author": "Arif <arifraffyfadlurahman@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PadukaArif/CivicInsight-AI-Backend.git"
+  },
   "module": "index.ts",
   "type": "module",
   "private": true,
